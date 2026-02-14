@@ -1,0 +1,169 @@
+<div class="request-status-container">
+  <div class="card">
+    <div class="header-section">
+      <h2>Estado de Solicitudes</h2>
+      <div class="actions">
+        <span class="p-input-icon-left search-box">
+          <i class="pi pi-search"></i>
+          <input 
+            pInputText 
+            type="text" 
+            placeholder="Buscar por ID o cuenta..."
+            (input)="onSearch($event)" />
+        </span>
+        <p-button 
+          icon="pi pi-refresh" 
+          [rounded]="true"
+          [text]="true"
+          (onClick)="refreshData()"
+          pTooltip="Actualizar"
+          tooltipPosition="bottom">
+        </p-button>
+      </div>
+    </div>
+
+    <p-table 
+      [value]="filteredRequests()" 
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes"
+      styleClass="p-datatable-striped">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id">
+            ID Solicitud
+            <p-sortIcon field="id"></p-sortIcon>
+          </th>
+          <th>Cuentas</th>
+          <th pSortableColumn="createdAt">
+            Fecha Creación
+            <p-sortIcon field="createdAt"></p-sortIcon>
+          </th>
+          <th pSortableColumn="status">
+            Estado
+            <p-sortIcon field="status"></p-sortIcon>
+          </th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-request let-expanded="expanded">
+        <tr>
+          <td>{{ request.id }}</td>
+          <td>
+            <span class="account-badge">
+              {{ request.accountNumbers.length }} cuenta(s)
+            </span>
+          </td>
+          <td>{{ request.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <p-tag 
+              [value]="accountRequestService.getStatusLabel(request.status)"
+              [severity]="getStatusSeverity(request.status)">
+            </p-tag>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <p-button 
+                *ngIf="canDownload(request) && !hasErrors(request)"
+                icon="pi pi-download"
+                [rounded]="true"
+                [text]="true"
+                severity="success"
+                (onClick)="confirmDownload(request)"
+                pTooltip="Descargar ZIP"
+                tooltipPosition="bottom">
+              </p-button>
+              
+              <p-button 
+                *ngIf="hasErrors(request)"
+                icon="pi pi-chevron-down"
+                [rounded]="true"
+                [text]="true"
+                (onClick)="dt.toggleRow(request)"
+                pTooltip="Ver detalles"
+                tooltipPosition="bottom">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="rowexpansion" let-request>
+        <tr>
+          <td colspan="5">
+            <div class="expansion-content">
+              <h4>Detalle de Cuentas</h4>
+              <div class="results-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Número de Cuenta</th>
+                      <th>Estado</th>
+                      <th>Tipo de Falla</th>
+                      <th>Mensaje</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let result of request.results">
+                      <td>{{ result.accountNumber }}</td>
+                      <td>
+                        <p-tag 
+                          [value]="result.status"
+                          [severity]="getAccountStatusSeverity(result.status)">
+                        </p-tag>
+                      </td>
+                      <td>
+                        <span *ngIf="result.errorType" class="error-type">
+                          {{ getErrorTypeLabel(result.errorType) }}
+                        </span>
+                        <span *ngIf="!result.errorType">-</span>
+                      </td>
+                      <td>
+                        <span *ngIf="result.errorMessage" class="error-message">
+                          {{ result.errorMessage }}
+                        </span>
+                        <span *ngIf="!result.errorMessage">-</span>
+                      </td>
+                      <td>
+                        <p-button 
+                          *ngIf="result.status === AccountStatus.SUCCESS"
+                          icon="pi pi-download"
+                          [rounded]="true"
+                          [text]="true"
+                          size="small"
+                          severity="success"
+                          (onClick)="confirmDownload(request, result.accountNumber)"
+                          pTooltip="Descargar cuenta"
+                          tooltipPosition="bottom">
+                        </p-button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-inbox"></i>
+              <p>No se encontraron solicitudes</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog></p-confirmDialog>

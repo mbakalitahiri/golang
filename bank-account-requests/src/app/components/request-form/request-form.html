@@ -1,0 +1,77 @@
+<div class="request-form-container">
+  <div class="card">
+    <h2>Nueva Solicitud de Cuentas</h2>
+    
+    <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label for="accountNumbers">Números de Cuenta *</label>
+        <p-chips 
+          id="accountNumbers"
+          formControlName="accountNumbers"
+          placeholder="Ingrese números de cuenta y presione Enter"
+          [allowDuplicate]="false"
+          styleClass="w-full">
+        </p-chips>
+        <small 
+          *ngIf="accountNumbersControl?.invalid && accountNumbersControl?.touched" 
+          class="error-message">
+          Debe ingresar al menos un número de cuenta
+        </small>
+      </div>
+
+      <div class="date-range-container">
+        <div class="form-field">
+          <label for="startDate">Fecha Inicial *</label>
+          <p-calendar 
+            id="startDate"
+            formControlName="startDate"
+            [minDate]="minDate()"
+            [maxDate]="maxDate()"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            placeholder="dd/mm/aaaa"
+            styleClass="w-full">
+          </p-calendar>
+          <small 
+            *ngIf="startDateControl?.invalid && startDateControl?.touched" 
+            class="error-message">
+            La fecha inicial es requerida
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="endDate">Fecha Final *</label>
+          <p-calendar 
+            id="endDate"
+            formControlName="endDate"
+            [minDate]="minDate()"
+            [maxDate]="maxDate()"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            placeholder="dd/mm/aaaa"
+            styleClass="w-full">
+          </p-calendar>
+          <small 
+            *ngIf="endDateControl?.invalid && endDateControl?.touched" 
+            class="error-message">
+            La fecha final es requerida
+          </small>
+        </div>
+      </div>
+
+      <div *ngIf="dateRangeError" class="form-field">
+        <p-message severity="error" [text]="dateRangeError"></p-message>
+      </div>
+
+      <div class="form-actions">
+        <p-button 
+          type="submit"
+          label="Enviar Solicitud"
+          icon="pi pi-send"
+          [loading]="submitting()"
+          [disabled]="requestForm.invalid || submitting()">
+        </p-button>
+      </div>
+    </form>
+  </div>
+</div>

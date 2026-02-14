@@ -1,0 +1,22 @@
+<div class="app-container">
+  <header>
+    <h1>{{ title() }}</h1>
+  </header>
+
+  <main>
+    <p-tabView [(activeIndex)]="activeTabIndex">
+      <p-tabPanel header="Nueva Solicitud" leftIcon="pi pi-plus-circle">
+        <app-request-form></app-request-form>
+      </p-tabPanel>
+      
+      <p-tabPanel header="Estado de Solicitudes" leftIcon="pi pi-list">
+        <app-request-status></app-request-status>
+      </p-tabPanel>
+    </p-tabView>
+  </main>
+
+  <p-toast position="top-right"></p-toast>
+</div>
+
+<router-outlet />
+
