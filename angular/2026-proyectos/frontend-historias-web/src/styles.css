@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Redefine los colores principales del proyecto */
+  --color-primary: #10b981; /* Verde Esmeralda (como tu botón de guardar) */
+  --color-secondary: #3b82f6; /* Azul Técnico (como el cronograma de Estera) */
+  --color-accent: #f59e0b; /* Ámbar (como el cronograma de Motor) */
+  --color-neutral: #1e293b; /* Pizarra Oscuro para textos y labels */
+  --color-base-100: #ffffff; /* Fondo de tarjetas */
+  --color-base-200: #f8fafc; /* Fondo general de la app */
+  --color-base-300: #cbd5e1; /* Color de los bordes de tus inputs */
+
+  /* Puedes ajustar también fuentes o radios de bordes si lo deseas */
+  --radius-xl: 12px;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}

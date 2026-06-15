@@ -1,0 +1,24 @@
+<div class="h-screen flex flex-col">
+  <!-- Buscador -->
+  <div class="border-b p-3">
+    <input class="w-full border rounded p-2" placeholder="Buscar nota..." />
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="flex flex-1 overflow-hidden">
+    <!-- Lista -->
+    <div class="w-80 border-r overflow-auto">
+      <app-notes-list />
+    </div>
+
+    <!-- Editor -->
+    <div class="flex-1 overflow-auto">
+      <app-note-editor />
+    </div>
+  </div>
+
+  <!-- Calendario -->
+  <div class="h-72 border-t">
+    <app-calendar />
+  </div>
+</div>
